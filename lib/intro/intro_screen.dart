@@ -39,11 +39,10 @@ PageViewModel(
 )
   ],
   showNextButton: true,
-  next: const Text('التالي'),
-  showSkipButton: true,
-  skip: const Text('تخطي'),
+  next: 'التالي',
+
   showDoneButton: true,
-  done: const Text("إبدأ الآن", style: TextStyle(fontWeight: FontWeight.w600)),
+  done:"إبدأ الآن",
   onDone: () {
     // When done button is press
   },

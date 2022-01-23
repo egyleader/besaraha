@@ -1,4 +1,3 @@
-
 import 'dart:math';
 
 import 'package:besaraha/intro/model/page_view_model.dart';
@@ -19,7 +18,7 @@ class IntroductionScreen extends StatefulWidget {
   final VoidCallback? onDone;
 
   /// Done button
-  final Widget? done;
+  final String done;
 
   /// Callback when Skip button is pressed
   final VoidCallback? onSkip;
@@ -27,16 +26,8 @@ class IntroductionScreen extends StatefulWidget {
   /// Callback when page change
   final ValueChanged<int>? onChange;
 
-  /// Skip button
-  final Widget? skip;
-
   /// Next button
-  final Widget? next;
-
-  /// Is the Skip button should be display
-  ///
-  /// @Default `false`
-  final bool showSkipButton;
+  final String next;
 
   /// Is the Next button should be display
   ///
@@ -164,12 +155,10 @@ class IntroductionScreen extends StatefulWidget {
     this.pages,
     this.rawPages,
     this.onDone,
-    this.done,
+    this.done = 'done',
     this.onSkip,
     this.onChange,
-    this.skip,
-    this.next,
-    this.showSkipButton = false,
+    this.next = 'next',
     this.showNextButton = true,
     this.showDoneButton = true,
     this.isProgress = true,
@@ -200,12 +189,10 @@ class IntroductionScreen extends StatefulWidget {
     this.rtl = false,
   })  : assert(pages != null || rawPages != null),
         assert(
-          (pages != null && pages.length > 0) ||
-              (rawPages != null && rawPages.length > 0),
+          (pages != null && pages.length > 0) || (rawPages != null && rawPages.length > 0),
           "You provide at least one page on introduction screen !",
         ),
         assert(!showDoneButton || (done != null && onDone != null)),
-        assert((showSkipButton && skip != null) || !showSkipButton),
         assert((showNextButton && next != null) || !showNextButton),
         assert(skipFlex >= 0 && dotsFlex >= 0 && nextFlex >= 0),
         assert(initialPage >= 0),
@@ -218,7 +205,6 @@ class IntroductionScreen extends StatefulWidget {
 class IntroductionScreenState extends State<IntroductionScreen> {
   late PageController _pageController;
   double _currentPage = 0.0;
-  bool _isSkipPressed = false;
   bool _isScrolling = false;
 
   PageController get controller => _pageController;
@@ -238,22 +224,6 @@ class IntroductionScreenState extends State<IntroductionScreen> {
   void next() => animateScroll(_currentPage.round() + 1);
 
   void previous() => animateScroll(_currentPage.round() - 1);
-
-  Future<void> _onSkip() async {
-    if (widget.onSkip != null) {
-      widget.onSkip!();
-    } else {
-      await skipToEnd();
-    }
-  }
-
-  Future<void> skipToEnd() async {
-    setState(() => _isSkipPressed = true);
-    await animateScroll(getPagesLength() - 1);
-    if (mounted) {
-      setState(() => _isSkipPressed = false);
-    }
-  }
 
   Future<void> animateScroll(int page) async {
     setState(() => _isScrolling = true);
@@ -277,34 +247,20 @@ class IntroductionScreenState extends State<IntroductionScreen> {
     return false;
   }
 
-  Widget _toggleBtn(Widget btn, bool isShow) {
-    return isShow
-        ? btn
-        : Opacity(opacity: 0.0, child: IgnorePointer(child: btn));
-  }
-
   @override
   Widget build(BuildContext context) {
     final isLastPage = (_currentPage.round() == getPagesLength() - 1);
-    bool isSkipBtn = (!_isSkipPressed && !isLastPage && widget.showSkipButton);
 
-    final skipBtn = IntroButton(
-      child: widget.skip,
-      color: widget.skipColor ?? widget.color,
-      onPressed: isSkipBtn ? _onSkip : null,
-    );
+    final actionBtn = MaterialButton(
+        child: Text(isLastPage ? widget.done : widget.next),
+        onPressed: isLastPage
+            ? (widget.showDoneButton && !_isScrolling ? widget.onDone : null)
+            : (widget.showNextButton && !_isScrolling ? next : null));
 
-    final nextBtn = IntroButton(
-      child: widget.next,
-      color: widget.nextColor ?? widget.color,
-      onPressed: widget.showNextButton && !_isScrolling ? next : null,
-    );
-
-    final doneBtn = IntroButton(
-      child: widget.done,
-      color: widget.doneColor ?? widget.color,
-      onPressed: widget.showDoneButton && !_isScrolling ? widget.onDone : null,
-    );
+    // if (isLastPage)
+    //       _toggleBtn(doneBtn, widget.showDoneButton)
+    //     else
+    //       _toggleBtn(nextBtn, widget.showNextButton),
 
     return Scaffold(
       backgroundColor: widget.globalBackgroundColor,
@@ -318,9 +274,7 @@ class IntroductionScreenState extends State<IntroductionScreen> {
                 scrollDirection: widget.pagesAxis,
                 controller: _pageController,
                 onPageChanged: widget.onChange,
-                physics: widget.freeze
-                    ? const NeverScrollableScrollPhysics()
-                    : widget.scrollPhysics,
+                physics: widget.freeze ? const NeverScrollableScrollPhysics() : widget.scrollPhysics,
                 children: widget.pages != null
                     ? widget.pages!
                         .map((p) => IntroPage(
@@ -347,16 +301,13 @@ class IntroductionScreenState extends State<IntroductionScreen> {
             right: 0,
             child: Column(
               children: [
+                actionBtn,
                 Container(
                   padding: widget.controlsPadding,
                   margin: widget.controlsMargin,
                   decoration: widget.dotsContainerDecorator,
                   child: Row(
                     children: [
-                      Expanded(
-                        flex: widget.skipFlex,
-                        child: _toggleBtn(skipBtn, isSkipBtn),
-                      ),
                       Expanded(
                         flex: widget.dotsFlex,
                         child: Center(
@@ -372,12 +323,6 @@ class IntroductionScreenState extends State<IntroductionScreen> {
                                 )
                               : const SizedBox(),
                         ),
-                      ),
-                      Expanded(
-                        flex: widget.nextFlex,
-                        child: isLastPage
-                            ? _toggleBtn(doneBtn, widget.showDoneButton)
-                            : _toggleBtn(nextBtn, widget.showNextButton),
                       ),
                     ].asReversed(widget.rtl),
                   ),

@@ -1,3 +1,4 @@
+import 'package:besaraha/intro/intro_screen.dart';
 import 'package:besaraha/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const SplashScreen());
+      home: const IntroScreen());
   }
 }

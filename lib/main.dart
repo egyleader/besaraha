@@ -1,5 +1,5 @@
+import 'package:besaraha/core/theme/theme.dart';
 import 'package:besaraha/intro/intro_screen.dart';
-import 'package:besaraha/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,9 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: lightTheme,
       home: const IntroScreen());
   }
 }

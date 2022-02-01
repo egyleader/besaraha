@@ -251,11 +251,12 @@ class IntroductionScreenState extends State<IntroductionScreen> {
   Widget build(BuildContext context) {
     final isLastPage = (_currentPage.round() == getPagesLength() - 1);
 
-    final actionBtn = MaterialButton(
-        child: Text(isLastPage ? widget.done : widget.next),
-        onPressed: isLastPage
-            ? (widget.showDoneButton && !_isScrolling ? widget.onDone : null)
-            : (widget.showNextButton && !_isScrolling ? next : null));
+    final actionBtn = IntroButton(
+      text: isLastPage ? widget.done : widget.next,
+      onPressed: isLastPage
+          ? (widget.showDoneButton && !_isScrolling ? widget.onDone : null)
+          : (widget.showNextButton && !_isScrolling ? next : null),
+    );
 
     // if (isLastPage)
     //       _toggleBtn(doneBtn, widget.showDoneButton)

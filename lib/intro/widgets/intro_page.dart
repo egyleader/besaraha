@@ -40,6 +40,7 @@ class _IntroPageState extends State<IntroPage>
         if (widget.page.image != null) widget.page.image!,
         Positioned.fill(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               ...[
                 Spacer(flex: widget.page.decoration.imageFlex),

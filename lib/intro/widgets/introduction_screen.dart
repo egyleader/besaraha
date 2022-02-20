@@ -258,11 +258,6 @@ class IntroductionScreenState extends State<IntroductionScreen> {
           : (widget.showNextButton && !_isScrolling ? next : null),
     );
 
-    // if (isLastPage)
-    //       _toggleBtn(doneBtn, widget.showDoneButton)
-    //     else
-    //       _toggleBtn(nextBtn, widget.showNextButton),
-
     return Scaffold(
       backgroundColor: widget.globalBackgroundColor,
       body: Stack(

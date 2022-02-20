@@ -13,6 +13,7 @@ class IntroScreen extends StatelessWidget {
     PageDecoration _pageDecoration = PageDecoration(
       imagePadding: const EdgeInsets.only(top: 100.0),
       titlePadding: const EdgeInsets.only(top: 100, bottom: 25.0),
+      descriptionPadding: const EdgeInsets.symmetric(horizontal: 25.0),
       titleTextStyle: Theme.of(context).textTheme.headline1!,
       bodyTextStyle: Theme.of(context).textTheme.bodyText1!,
     );
@@ -21,7 +22,7 @@ class IntroScreen extends StatelessWidget {
       pages: [
         PageViewModel(
             title: "بصراحة",
-            body: "من اكثر الاشياء التي تساعد في تطوير العلاقات الانسانية وحل المشكلات هي الحديث عن ما في داخلك بصراحة",
+            body: "من اكثر الاشياء التي تساعد في تطوير \nالعلاقات الانسانية وحل المشكلات هي \nالحديث عن ما في داخلك بصراحة",
             image: SvgPicture.asset('assets/intro/1.svg'),
             decoration: _pageDecoration),
         PageViewModel(
